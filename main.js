@@ -1,15 +1,17 @@
-const { Worker } = require('worker_threads');
+const cluster = require('cluster');
+const fs = require('fs');
+const { MerkleTree } = require('merkletreejs');
+const keccak256 = require('keccak256');
 
-const fileNames = ['wallet.txt']; 
+const fileNames = ['walletList.txt'];
 
-fileNames.forEach(fileName => {
-  const worker = new Worker('./fileReader.js', { workerData: fileName });
-
-  worker.on('message', function(addresses) {
-
-    const { MerkleTree } = require('merkletreejs');
-    const keccak256 = require('keccak256');
-
+if (cluster.isMaster) {
+  fileNames.forEach(fileName => {
+    const worker = cluster.fork();
+    worker.send(fileName);
+  });
+  cluster.on('message', (worker, message) => {
+    const { addresses } = message;
     const leafNodes = addresses.map(address => {
       const bufferAddress = Buffer.from(address.replace(/^0x/, ''), 'hex');
       return keccak256(bufferAddress);
@@ -18,8 +20,7 @@ fileNames.forEach(fileName => {
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true });
     const rootHash = merkleTree.getHexRoot();
 
-    const fs = require('fs');
-    const stream = fs.createWriteStream(`${fileName}_output.json`);
+    const stream = fs.createWriteStream(`${worker.id}_output.json`);
 
     stream.write('{"rootHash":"' + rootHash + '","wallets":[');
 
@@ -47,7 +48,14 @@ fileNames.forEach(fileName => {
     stream.end();
   });
 
-  worker.on('error', function(error) {
-    console.error(error);
+} else {
+  process.on('message', (fileName) => {
+    const addresses = readFromFile(fileName);
+    process.send({ addresses });
   });
-});
+
+  function readFromFile(fileName) {
+    const addresses = fs.readFileSync(fileName, 'utf-8').split('\n').filter(address => address);
+    return addresses;
+  }
+}

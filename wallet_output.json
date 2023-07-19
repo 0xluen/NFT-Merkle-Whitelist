@@ -2,7 +2,7 @@
     "rootHash": "0x5d271352f7113d95bbd76b0c3b85aa9446490a703f4158c837a298ebca4cd02c",
     "wallets": [
       {
-        "address": "0xD4E3baEB635aAB6854f9B14d893bABB54b4BE768",
+        "address": "0xD4E3baEB635aAB6854faB14d893bABB54b4BE768",
         "proof": [
           "0x52931fd2b604200cb3b5260ef68c47befe54d386db08cefccae8604bd0818516",
           "0x1d9dd6aa7dd94b23377f4b75fef869f2d88d06e91ac27ad549878004f0f694cf",
@@ -10,7 +10,7 @@
         ]
       },
       {
-        "address": "0x3559f16E4Ddf56d6090152a264c1DD8F652eEA12",
+        "address": "0x3559f16E4Ddf56d6090b52a264c1DD8F652eEA12",
         "proof": [
           "0x492dde00cbb6b9a41980a209743f599394454082bcd431b8d3d3edede066739d",
           "0x1d9dd6aa7dd94b23377f4b75fef869f2d88d06e91ac27ad549878004f0f694cf",
@@ -18,7 +18,7 @@
         ]
       },
       {
-        "address": "0x98a009Fe6F65D737aEe5156598d4c54FfAc89144",
+        "address": "0x98a009Fe6F65D7d7cEe5156598d4c54FfAc89144",
         "proof": [
           "0xfdc9f6ff695945bbdb4a2bd1b55e62d7caf27945291db77e2e126550f5efd1b5",
           "0xa0374e441790e6b17f3cf4cec462eab8e214a42fb2191ca11470d1fc173210f3",

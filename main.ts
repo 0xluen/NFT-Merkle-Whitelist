@@ -41,8 +41,12 @@ if (cluster.isMaster) {
 
       stream.write(JSON.stringify(wallet) + suffix);
       completedCount++;
-      const progress = ((completedCount / totalAddresses) * 100).toFixed(2);
-      console.log(`Processing : ${progress}%`);
+     if (completedCount === totalAddresses) {
+        console.log('Successfull !');
+      } else {
+        const progress = ((completedCount / totalAddresses) * 100).toFixed(2);
+        console.log(`Processing: ${progress}%`);
+      };
     });
 
     stream.write(']}');

@@ -3,9 +3,7 @@ const keccak256 = require('keccak256');
 const fs = require('fs');
 const { createWriteStream } = require('fs');
 
-const addresses = fs.readFileSync('walletList.txt', 'utf-8')
-  .split(/\r?\n/)  // Unix ve Windows uyumlu satır ayırma
-  .filter(address => address.trim());  // Boşlukları ve boş satırları temizle
+const addresses = fs.readFileSync('walletList.txt', 'utf-8').split('\n').filter(address => address);
 
 const leafNodes = addresses.map(address => {
   const bufferAddress = Buffer.from(address.replace(/^0x/, ''), 'hex');
@@ -20,6 +18,8 @@ const stream = createWriteStream('wallet_output.json');
 stream.write('{"rootHash":"' + rootHash + '","wallets":[');
 
 const totalAddresses = addresses.length;
+let completedCount = 0;
+
 addresses.forEach((address, index) => {
   const bufferAddress = Buffer.from(address.replace(/^0x/, ''), 'hex');
   const leaf = keccak256(bufferAddress);
@@ -32,7 +32,11 @@ addresses.forEach((address, index) => {
   const suffix = (index !== addresses.length - 1) ? ',' : '';
 
   stream.write(JSON.stringify(wallet) + suffix);
+  completedCount++;
+  const progress = ((completedCount / totalAddresses) * 100).toFixed(2);
+  console.log(`Processing : ${progress}%`);
 });
 
 stream.write(']}');
-stream.end();
+
+stream.end(); 
